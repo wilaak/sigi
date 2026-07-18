@@ -1,0 +1,36 @@
+{
+    "name": "wilaak/sigi",
+    "description": "Embedded DSL for HTML. Compose HTML from functions. Safe by construction.",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.2"
+    },
+    "autoload": {
+        "files": [
+            "src/core.php",
+            "src/el.php",
+            "src/at.php",
+            "src/unsafe.php",
+            "src/css.php",
+            "src/js.php",
+            "src/url.php",
+            "src/render.php"
+        ]
+    },
+    "autoload-dev": {
+        "files": [
+            "src/test.php"
+        ]
+    },
+    "scripts": {
+        "test": [
+            "php test/test.php",
+            "php test/views.test.php",
+            "php test/id.test.php",
+            "php test/render.test.php",
+            "php test/styled.test.php",
+            "php test/url.test.php",
+            "php test/env.test.php"
+        ]
+    }
+}
