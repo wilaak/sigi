@@ -6,7 +6,7 @@ An embedded DSL for HTML. Compose HTML from functions. Safe by construction.
 
 ## Usage
 
-```php
+```
 namespace app\layout;
 
 use sigi;
@@ -46,7 +46,7 @@ echo app('hello', el\H1('Hello, World!'));
 
 Sigi values sort themselves by type: attributes configure the tag, everything else is content. Values are escaped, elements nest and `null` and `false` disappear.
 
-```php
+```
 use sigi\{el, at};
 
 el\P('2 < 3 is ', el\STRONG('true'));
@@ -64,7 +64,7 @@ function table(array $users): sigi\Html
 
 Naming convention is uppercase for HTML spec. Sigi's own helpers are lowercase.
 
-```php
+```
 // any element by name
 el\tag('my-widget', ...);
 
@@ -85,7 +85,7 @@ el\doctype();
 
 Sigi knows each slot and encodes it.
 
-```php
+```
 // href escaped; javascript: -> href="#"
 el\A(at\HREF($user_input), 'Profile'); 
 
@@ -96,7 +96,7 @@ sigi\Env::install(new sigi\Env(
 
 Dangerous slots refuse bare strings: style takes `Css` types, event/script slots take `Js`. Build those values safely:
 
-```php
+```
 use sigi\{css, js, url};
 
 // style="color:red"
@@ -132,7 +132,7 @@ unsafe\js($value);              // raw JS expression
 
 Control flow is just PHP. `null` and `false` vanish from a slot, a branch that says no simply disappears:
 
-```php
+```
 function nav(bool $is_admin): sigi\Html
 {
     return el\NAV(
@@ -144,7 +144,7 @@ function nav(bool $is_admin): sigi\Html
 
 Loops build an array and splat it in; `match`, `?:` and `??` drop in wherever they read well:
 
-```php
+```
 function menu(array $links, ?object $user): sigi\Html
 {
     $items = [];
@@ -164,7 +164,7 @@ function menu(array $links, ?object $user): sigi\Html
 
 Every spec-defined attribute has an ALL-CAPS helper with a typed signature:
 
-```php
+```
 at\HREF('/x');
 at\CLS('a', 'b');
 at\ID('main');
@@ -181,7 +181,7 @@ Names that collide with PHP keywords take a trailing underscore: `at\CLASS_`, `a
 
 `at\sel()` reads a CSS-style selector and fills in `class` and `id`:
 
-```php
+```
 // <div class="card">
 el\DIV(at\sel('.card'));
 
@@ -194,7 +194,7 @@ el\DIV(at\sel('.card.wide#main'));
 
 ### set: attribute map
 
-```php
+```
 el\INPUT(at\set([
     'type' => 'search',
     'name' => 'q',
@@ -212,7 +212,7 @@ Values go through the same slot pipeline as the curated helpers, so style, event
 
 Conditional attributes are just PHP, the same way conditional content is: an attribute slot drops `null` and `false`, so a ternary that says no disappears.
 
-```php
+```
 function save_button(bool $busy): sigi\Html
 {
     return el\BUTTON(
@@ -233,7 +233,7 @@ function save_button(bool $busy): sigi\Html
 
 `sigi\id()` answers "what component am I, here, in this render?". It is a unique, stable element id with nothing written by hand.
 
-```php
+```
 sigi\id(): string {}             // this component's identity (a read, not a mint)
 sigi\current_id(): string {}    // the enclosing component's id — for helpers
 sigi\with_id($key, $fn);       // render $fn under an identity scope; returns its value
@@ -244,7 +244,7 @@ sigi\pass($fn): mixed {}      // run $fn as one render pass (render() wraps the 
 
 Every `id()` call inside one activation returns the same string — key state with it and stamp it on the element, and they always agree:
 
-```php
+```
 function counter(): Html
 {
     $id = sigi\id();                      // 'counter'
@@ -264,7 +264,7 @@ function toolbar(): Html
 
 The same call site repeated is a loop, so it throws rather than guesses. Key each iteration:
 
-```php
+```
 foreach ($users as $u) {
     $cards[] = sigi\with_id($u->id, fn() => card($u));   // id="u42--card"
 }
@@ -272,7 +272,7 @@ foreach ($users as $u) {
 $cards = array_map(fn($u) => sigi\with_id($u->id, fn() => card($u)), $users);
 ```
 
-```php
+```
 el\DIV(
     sigi\with_id('cart', counter(...)),       // id="cart--counter"
     sigi\with_id('wishlist', counter(...)),   // id="wishlist--counter"
@@ -283,7 +283,7 @@ el\DIV(
 
 This is the seam for building on top of Sigi.
 
-```php
+```
 function state(mixed $default): mixed
 {
     $key = sigi\current_id();   // the component that called us
@@ -304,7 +304,7 @@ function counter(): Html
 
 Write CSS. Don't name it. `unsafe\styled()` takes a component's rules and returns the class to hang them on.
 
-```php
+```
 use sigi\{el, at, css, unsafe};
 
 function card(string $name, int $pct): sigi\Html
@@ -321,7 +321,7 @@ function card(string $name, int $pct): sigi\Html
 }
 ```
 
-```php
+```
 function page(array $users): sigi\Html
 {
     $body = el\MAIN(...array_map(
@@ -355,7 +355,7 @@ echo sigi\pass(fn() => views\app('Home', $slot));
 
 For a host that maps a route to a template:
 
-```php
+```
 sigi\Env::install(new sigi\Env(
     cache: __DIR__ . '/var/sigi',
     resolver: new sigi\DirResolver('resources/views'),
@@ -367,7 +367,7 @@ echo sigi\render('admin.users', ['rows' => $rows]);
 // passes the data as named arguments
 ```
 
-```php
+```
 // resources/views/admin/users.sigi.php
 namespace app\views;
 
@@ -384,7 +384,7 @@ function users(array $rows): \sigi\Html   // real typed signature —
 
 The seam is one interface, replace any piece:
 
-```php
+```
 interface ViewResolver
 {
     public function pathFor(string $name): ?string;   // absolute path, or null
@@ -397,7 +397,7 @@ new sigi\DirResolver('views', ext: '.sigi.php');    // extension is configurable
 
 ### Laravel
 
-```php
+```
 // in a service provider
 $this->app['view']->addExtension('sigi.php', 'sigi');
 $this->app['view']->getEngineResolver()->register('sigi', fn () => new SigiEngine());
