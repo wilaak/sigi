@@ -1,6 +1,4 @@
-# <img src="./assets/sigi.svg" alt="sigi" width="100">
-
-> **WARNING**: Slop coded! W.I.P
+# <img src="./assets/sigi.svg" alt="sigi" width="150">
 
 An embedded DSL for HTML. Compose HTML from functions. Safe by construction.
 
@@ -119,7 +117,7 @@ $link = url\external($input, hosts: ['.wikipedia.org']);
 
 To bypass escaping you go through `unsafe\`.
 
-```php
+```
 use sigi\unsafe;
 
 unsafe\html($trusted_markup);   // raw HTML, verbatim
