@@ -342,10 +342,10 @@ function page(array $users): sigi\Html
 
 For a persistent app that autoloads its views, nothing else is required.
 
-```php
+```
 echo sigi\pass(fn() => views\app('Home', $slot));
 
-// a fresh pass per render — identity and the sheet start clean each time
+// a fresh pass per render, identity and the sheet start clean each time
 echo sigi\pass(fn() => views\app('Home', $slot));
 ```
 
