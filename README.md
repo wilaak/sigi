@@ -142,7 +142,7 @@ function nav(bool $is_admin): sigi\Html
 
 Loops build an array and splat it in; `match`, `?:` and `??` drop in wherever they read well:
 
-```
+```php
 function menu(array $links, ?object $user): sigi\Html
 {
     $items = [];
@@ -270,7 +270,7 @@ foreach ($users as $u) {
 $cards = array_map(fn($u) => sigi\with_id($u->id, fn() => card($u)), $users);
 ```
 
-```
+```php
 el\DIV(
     sigi\with_id('cart', counter(...)),       // id="cart--counter"
     sigi\with_id('wishlist', counter(...)),   // id="wishlist--counter"
